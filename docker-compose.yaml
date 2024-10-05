@@ -1,0 +1,37 @@
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    volumes:
+      - mongo-data:/data/db
+    networks:
+        - mongo
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "8000:8081"
+    environment:
+      -  ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=root
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    networks:
+      - mongo
+
+# Define named volumes
+volumes:
+  mongo-data:
+    driver: local
+
+networks:
+      mongo: # docker-compose-files_mongo
+        driver: bridge
